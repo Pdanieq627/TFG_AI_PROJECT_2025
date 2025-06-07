@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6692899508276572318}
   m_Layer: 7
   m_Name: SkeletonEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5233288523412121536
 SpriteRenderer:
@@ -113,7 +113,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &7374793921143575786
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -171,3 +171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 490285f7a98a26b4cb26a05cfb4c0904, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chaseSpeed: 3
+  detectionRadius: 5
+  maxHP: 30
+  hitCooldown: 1
+  contactDamage: 5

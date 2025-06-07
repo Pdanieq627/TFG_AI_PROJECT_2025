@@ -3,15 +3,24 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class SkeletonAI : MonoBehaviour
 {
-    [Header("Parámetros")]
-    public float chaseSpeed = 3f;           // 3 u/s = ~96 px/s
-    public float detectionRadius = 5f;      // tiles
+    [Header("Parámetros IA")]
+    public float chaseSpeed = 3f;
+    public float detectionRadius = 5f;
+
+    [Header("Salud Enemigo")]
+    public int maxHP = 30;
+    private int currentHP;
+
     private Rigidbody2D rb;
     private Transform player;
+    private float lastHitTime = 0f;
+    public float hitCooldown = 1f;
+    public int contactDamage = 5;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        currentHP = maxHP;
     }
 
     void Start()
@@ -27,9 +36,33 @@ public class SkeletonAI : MonoBehaviour
         float dist = Vector2.Distance(rb.position, player.position);
         if (dist <= detectionRadius)
         {
-            // Perseguir
             Vector2 dir = (player.position - transform.position).normalized;
             rb.MovePosition(rb.position + dir * chaseSpeed * Time.fixedDeltaTime);
+        }
+    }
+
+    public void TakeDamage(int amount)
+    {
+        currentHP -= amount;
+        if (currentHP <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
+    }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.collider.CompareTag("Player") && Time.time - lastHitTime >= hitCooldown)
+        {
+            var combat = col.collider.GetComponent<PlayerCombat>();
+            if (combat != null)
+                combat.ReceiveDamage(contactDamage);
+            lastHitTime = Time.time;
         }
     }
 }
