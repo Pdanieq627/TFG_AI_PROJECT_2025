@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,9 +23,15 @@ public class DungeonGenerator : MonoBehaviour
     private List<RectInt> rooms;           // Lista de rectángulos (salas)
     private List<Vector2Int> roomCenters;  // Centros de cada sala
 
+    [Header("Spawns")]
+    public GameObject playerPrefab;
+    public GameObject enemyPrefab;
+
+
     void Start()
     {
         GenerateDungeon();
+        //public List<Vector2Int> RoomCenters => roomCenters;
     }
 
     /// <summary>
@@ -45,13 +52,16 @@ public class DungeonGenerator : MonoBehaviour
         rooms = new List<RectInt>();
         roomCenters = new List<Vector2Int>();
 
-        // 2) Generar salas (5 salas de tamaño aleatorio 3x3 a 5x5)
-        int maxRooms = 5;
+        // 2) Generar salas (Entre 7 y 9 salas de tamaño aleatorio)
+        int maxRooms = Random.Range(7, 9); ;
+        //int maxRooms = 5;
         for (int i = 0; i < maxRooms; i++)
         {
             // Tamaño aleatorio de sala
-            int roomWidth = Random.Range(3, 6);  // 3, 4 o 5
-            int roomHeight = Random.Range(3, 6);
+            int roomWidth = Random.Range(4, 7);  // 4–6 tiles de ancho
+            int roomHeight = Random.Range(4, 7); // 4–6 tiles de alto
+            //int roomWidth = Random.Range(3, 6);  // 3, 4 o 5
+            //int roomHeight = Random.Range(3, 6);
 
             // Posición aleatoria garantizando que la sala quede dentro del grid
             int roomX = Random.Range(1, width - roomWidth - 1);
@@ -104,7 +114,33 @@ public class DungeonGenerator : MonoBehaviour
             dungeonTilemap.SetTile(new Vector3Int(firstCenter.x, firstCenter.y, 0), stairUpTile);
             dungeonTilemap.SetTile(new Vector3Int(lastCenter.x, lastCenter.y, 0), stairDownTile);
         }
+
+        // --- Spawn Player en la primera sala ---
+        if (playerPrefab != null && roomCenters.Count > 0)
+        {
+            Vector2Int spawn = roomCenters[0];
+            Vector3 spawnPos = new Vector3(spawn.x + 0.5f, spawn.y + 0.5f, 0);
+            Instantiate(playerPrefab, spawnPos, Quaternion.identity);
+        }
+
+        // --- Spawn Enemigos en el resto de salas ---
+        if (enemyPrefab != null)
+        {
+            // Empieza en 1 para no spawnear en la primera sala
+            for (int i = 1; i < roomCenters.Count; i++)
+            {
+                Vector2Int center = roomCenters[i];
+                // Añade un pequeño desplazamiento aleatorio dentro de la sala
+                float offsetX = Random.Range(-0.4f, 0.4f);
+                float offsetY = Random.Range(-0.4f, 0.4f);
+                Vector3 enemyPos = new Vector3(center.x + 0.5f + offsetX, center.y + 0.5f + offsetY, 0);
+                Instantiate(enemyPrefab, enemyPos, Quaternion.identity);
+            }
+        }
+
+
     }
+    //public List<Vector2Int> RoomCenters => roomCenters;
 
     /// <summary>
     /// Marca todos los tiles dentro de los límites de la sala como suelo (1).
