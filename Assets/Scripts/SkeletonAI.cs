@@ -44,11 +44,10 @@ public class SkeletonAI : MonoBehaviour
     public void TakeDamage(int amount)
     {
         currentHP -= amount;
+        AudioManager.Instance.PlaySkeletonDamage();  // <-- sonido de daño
         if (currentHP <= 0)
         {
-            //var pc = FindObjectOfType<PlayerCombat>();
-            //pc.GainXP(10);
-
+            AudioManager.Instance.PlaySkeletonDeath(); // <-- sonido de muerte
             Die();
         }
     }

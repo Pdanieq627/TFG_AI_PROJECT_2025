@@ -16,10 +16,10 @@ public class PlayerCombat : MonoBehaviour
     public float attackCooldown = 0.5f;
     private float lastAttackTime = 0f;
 
-    [Header("Experiencia")]
-    public int currentXP = 0;
-    public int level = 1;
-    public int xpPerLevel = 50;
+    //[Header("Inventario")]
+    //public int currentPotions = 0;
+    //public int maxPotions = 3;
+    //public int armorBonus = 0;  // usa esto al recibir daño
 
 
     void Awake()
@@ -56,14 +56,19 @@ public class PlayerCombat : MonoBehaviour
 
     public void ReceiveDamage(int amount)
     {
+        //int effectiveDamage = Mathf.Max(amount - armorBonus, 0);
+        //currentHP -= effectiveDamage;
         currentHP -= amount;
+        AudioManager.Instance.PlayPlayerDamage(); // <-- sonido de daño
         if (currentHP <= 0)
         {
             currentHP = 0;
+            AudioManager.Instance.PlayPlayerDeath(); // <-- sonido de muerte
             Die();
         }
         Debug.Log("Player le queda vida: " + currentHP);
     }
+
 
     private void Die()
     {
@@ -77,24 +82,4 @@ public class PlayerCombat : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(hitboxOrigin.position, hitboxSize);
     }
-
-//    public void GainXP(int amount)
-//    {
-//        currentXP += amount;
-//        if (currentXP >= xpPerLevel * level)
-//        {
-//            currentXP -= xpPerLevel * level;
-//            LevelUp();
-//        }
-//    }
-
-//    private void LevelUp()
-//    {
-//        level++;
-//        maxHP += 5;
-//        currentHP = Mathf.Min(currentHP + Mathf.RoundToInt(maxHP * 0.3f), maxHP);
-//        baseDamage += 1;
-//        // Aquí un popup o SFX: subes de nivel
-//    }
-
 }

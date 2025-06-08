@@ -29,11 +29,6 @@ public class DungeonGenerator : MonoBehaviour
 
     [Header("Loot")]
     public GameObject chestPrefab;
-
-    [Header("Piso actual")]
-    public int currentFloor = 1; // Puedes iniciarlo en 1 o configurarlo desde otro script.
-
-
     void Start()
     {
         GenerateDungeon();

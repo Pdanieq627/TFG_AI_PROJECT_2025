@@ -1,86 +1,95 @@
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
-using static UnityEditor.Progress;
+//using System.Collections.Generic;
+//using UnityEngine;
+//using UnityEngine.UI;
 
-public class ChestController : MonoBehaviour
-{
-    [Header("Loot UI")]
-    public GameObject lootPanel;       // El panel con las 3 opciones
-    public Button[] optionButtons;     // Array de 3 Buttons
-    public Image[] optionIcons;        // Sus Image hijos
-    public TMP_Text[] optionTexts;     // Sus TMP_Text hijos
+//public class ChestController : MonoBehaviour
+//{
+//    [Header("Loot UI")]
+//    public Canvas lootCanvas;             // LootCanvas de la escena
+//    public Button[] optionButtons;        // Option1, Option2, Option3
+//    public Image[] optionIcons;
+//    public Text[] optionLabels;           // o TMP_Text si usas TextMeshPro
 
-    [Header("Loot Tables")]
-    public List<Item> floor1And2Loot;
-    public List<Item> floor3And4Loot;
-    public List<Item> floor5Loot;
+//    [Header("Loot Tables")]
+//    public List<ItemData> floor1Items;    // Arrastra SwordIron, ArmorLeather, HealthPotion
 
-    private List<Item> currentLootOptions;
-    private int chestFloor;
+//    private List<ItemData> currentLoot;
+//    private bool isOpen = false;
 
-    void Start()
-    {
-        // Averigua en qué piso estamos buscando el DungeonGenerator
-        var dg = FindObjectOfType<DungeonGenerator>();
-        chestFloor = dg.currentFloor; // Necesitarás exponer currentFloor en DG
-    }
+//    void OnTriggerEnter2D(Collider2D col)
+//    {
+//        if (isOpen) return;
+//        if (col.CompareTag("Player"))
+//        {
+//            OpenChest();
+//        }
+//    }
 
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col.CompareTag("Player"))
-        {
-            OpenChest();
-            Destroy(GetComponent<Collider2D>());
-            GetComponent<SpriteRenderer>().enabled = false;
-        }
-    }
+//    void OpenChest()
+//    {
+//        isOpen = true;
+//        // Generar 3 ítems aleatorios (sin repetir)
+//        currentLoot = new List<ItemData>();
+//        var pool = new List<ItemData>(floor1Items);
 
-    void OpenChest()
-    {
-        // Construye la lista adecuada
-        if (chestFloor <= 2) currentLootOptions = floor1And2Loot;
-        else if (chestFloor <= 4) currentLootOptions = floor3And4Loot;
-        else currentLootOptions = floor5Loot;
+//        for (int i = 0; i < optionButtons.Length; i++)
+//        {
+//            if (pool.Count == 0) break;
+//            int idx = Random.Range(0, pool.Count);
+//            currentLoot.Add(pool[idx]);
+//            pool.RemoveAt(idx);
+//        }
 
-        // Selecciona 3 ítems aleatorios sin repetir
-        var copy = new List<Item>(currentLootOptions);
-        var picks = new List<Item>();
-        for (int i = 0; i < 3; i++)
-        {
-            if (copy.Count == 0) break;
-            int idx = Random.Range(0, copy.Count);
-            picks.Add(copy[idx]);
-            copy.RemoveAt(idx);
-        }
+//        // Mostrar UI
+//        lootCanvas.gameObject.SetActive(true);
+//        Time.timeScale = 0f;  // pausa el juego
 
-        // Muestra el panel
-        lootPanel.SetActive(true);
-        for (int i = 0; i < optionButtons.Length; i++)
-        {
-            if (i < picks.Count)
-            {
-                var item = picks[i];
-                optionIcons[i].sprite = item.icon;
-                optionTexts[i].text = item.name + "\n" + item.description;
-                int capture = i; // para la lambda
-                optionButtons[i].onClick.RemoveAllListeners();
-                optionButtons[i].onClick.AddListener(() => OnItemSelected(picks[capture]));
-            }
-            else
-            {
-                optionButtons[i].gameObject.SetActive(false);
-            }
-        }
-    }
+//        for (int i = 0; i < optionButtons.Length; i++)
+//        {
+//            if (i < currentLoot.Count)
+//            {
+//                var item = currentLoot[i];
+//                optionIcons[i].sprite = item.icon;
+//                optionLabels[i].text = item.itemName + "\n" + item.description;
+//                int copy = i;  // closure
+//                optionButtons[i].onClick.RemoveAllListeners();
+//                optionButtons[i].onClick.AddListener(() => OnSelectItem(copy));
+//                optionButtons[i].gameObject.SetActive(true);
+//            }
+//            else
+//            {
+//                optionButtons[i].gameObject.SetActive(false);
+//            }
+//        }
+//    }
 
-    void OnItemSelected(Item chosen)
-    {
-        // Aplica el ítem al jugador
-        var pc = FindObjectOfType<PlayerCombat>();
-        pc.EquipItem(chosen);
-        lootPanel.SetActive(false);
-        Destroy(gameObject); // Cofre consumido
-    }
-}
+//    void OnSelectItem(int index)
+//    {
+//        var item = currentLoot[index];
+//        var player = FindObjectOfType<PlayerCombat>();
+//        if (player != null)
+//        {
+//            // Aplicar efecto
+//            switch (item.itemType)
+//            {
+//                case ItemType.Weapon:
+//                    player.baseDamage = item.damageBonus;
+//                    break;
+//                case ItemType.Armor:
+//                    player.armorBonus = item.armorBonus;
+//                    break;
+//                case ItemType.Potion:
+//                    player.currentPotions = Mathf.Min(player.currentPotions + 1, player.maxPotions);
+//                    break;
+//            }
+//        }
+//        CloseChest();
+//    }
+
+//    void CloseChest()
+//    {
+//        lootCanvas.gameObject.SetActive(false);
+//        Time.timeScale = 1f;
+//        Destroy(gameObject);  // destruye el cofre
+//    }
+//}
