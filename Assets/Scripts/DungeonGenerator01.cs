@@ -27,6 +27,12 @@ public class DungeonGenerator : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
 
+    [Header("Loot")]
+    public GameObject chestPrefab;
+
+    [Header("Piso actual")]
+    public int currentFloor = 1; // Puedes iniciarlo en 1 o configurarlo desde otro script.
+
 
     void Start()
     {
@@ -123,14 +129,36 @@ public class DungeonGenerator : MonoBehaviour
             Instantiate(playerPrefab, spawnPos, Quaternion.identity);
         }
 
-        // --- Spawn Enemigos en el resto de salas ---
+        // 7) Spawn de cofres en cada sala (excepto la primera)
+        if (chestPrefab != null)
+        {
+            for (int i = 1; i < roomCenters.Count; i++)
+            {
+                var c = roomCenters[i];
+                Instantiate(
+                    chestPrefab,
+                    new Vector3(c.x + 0.5f, c.y + 0.5f, 0),
+                    Quaternion.identity
+                );
+            }
+        }
+
+        // --- Spawn Enemigos y Cofres ---
         if (enemyPrefab != null)
         {
             // Empieza en 1 para no spawnear en la primera sala
             for (int i = 1; i < roomCenters.Count; i++)
             {
                 Vector2Int center = roomCenters[i];
-                // Añade un pequeño desplazamiento aleatorio dentro de la sala
+
+                //// Spawn del cofre
+                //if (chestPrefab != null)
+                //{
+                //    Vector3 chestPos = new Vector3(center.x + 0.5f, center.y + 0.5f, 0);
+                //    Instantiate(chestPrefab, chestPos, Quaternion.identity);
+                //}
+
+                // Spawn del enemigo
                 float offsetX = Random.Range(-0.4f, 0.4f);
                 float offsetY = Random.Range(-0.4f, 0.4f);
                 Vector3 enemyPos = new Vector3(center.x + 0.5f + offsetX, center.y + 0.5f + offsetY, 0);

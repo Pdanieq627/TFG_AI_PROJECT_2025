@@ -16,6 +16,12 @@ public class PlayerCombat : MonoBehaviour
     public float attackCooldown = 0.5f;
     private float lastAttackTime = 0f;
 
+    [Header("Experiencia")]
+    public int currentXP = 0;
+    public int level = 1;
+    public int xpPerLevel = 50;
+
+
     void Awake()
     {
         currentHP = maxHP;
@@ -71,4 +77,24 @@ public class PlayerCombat : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(hitboxOrigin.position, hitboxSize);
     }
+
+//    public void GainXP(int amount)
+//    {
+//        currentXP += amount;
+//        if (currentXP >= xpPerLevel * level)
+//        {
+//            currentXP -= xpPerLevel * level;
+//            LevelUp();
+//        }
+//    }
+
+//    private void LevelUp()
+//    {
+//        level++;
+//        maxHP += 5;
+//        currentHP = Mathf.Min(currentHP + Mathf.RoundToInt(maxHP * 0.3f), maxHP);
+//        baseDamage += 1;
+//        // Aquí un popup o SFX: subes de nivel
+//    }
+
 }

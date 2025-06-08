@@ -46,6 +46,9 @@ public class SkeletonAI : MonoBehaviour
         currentHP -= amount;
         if (currentHP <= 0)
         {
+            //var pc = FindObjectOfType<PlayerCombat>();
+            //pc.GainXP(10);
+
             Die();
         }
     }
