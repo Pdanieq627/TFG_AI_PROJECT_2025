@@ -223,6 +223,3 @@ MonoBehaviour:
   hitboxOrigin: {fileID: 5485598562205973029}
   hitboxSize: {x: 1, y: 1}
   attackCooldown: 0.5
-  currentXP: 0
-  level: 1
-  xpPerLevel: 50
