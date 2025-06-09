@@ -125,18 +125,18 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         // 7) Spawn de cofres en cada sala (excepto la primera)
-        if (chestPrefab != null)
-        {
-            for (int i = 1; i < roomCenters.Count; i++)
-            {
-                var c = roomCenters[i];
-                Instantiate(
-                    chestPrefab,
-                    new Vector3(c.x + 0.5f, c.y + 0.5f, 0),
-                    Quaternion.identity
-                );
-            }
-        }
+        //if (chestPrefab != null)
+        //{
+        //    for (int i = 1; i < roomCenters.Count; i++)
+        //    {
+        //        var c = roomCenters[i];
+        //        Instantiate(
+        //            chestPrefab,
+        //            new Vector3(c.x + 0.5f, c.y + 0.5f, 0),
+        //            Quaternion.identity
+        //        );
+        //    }
+        //}
 
         // --- Spawn Enemigos y Cofres ---
         if (enemyPrefab != null)
@@ -182,28 +182,77 @@ public class DungeonGenerator : MonoBehaviour
     /// <summary>
     /// Crea un pasillo en forma de L entre dos centros de sala.
     /// </summary>
+    //private void CreateCorridor(Vector2Int from, Vector2Int to)
+    //{
+    //    int x = from.x;
+    //    int y = from.y;
+
+    //    // Primero, mover horizontalmente hasta la x de destino
+    //    while (x != to.x)
+    //    {
+    //        grid[x, y] = 1;
+    //        if (to.x > x) x++;
+    //        else x--;
+    //    }
+    //    // Luego, mover verticalmente hasta la y de destino
+    //    while (y != to.y)
+    //    {
+    //        grid[x, y] = 1;
+    //        if (to.y > y) y++;
+    //        else y--;
+    //    }
+    //    // Finalmente, marcar la última posición como suelo
+    //    grid[x, y] = 1;
+    //}
+
+    /// <summary>
+    /// Crea un pasillo ancho en forma de L entre dos centros de sala.
+    /// </summary>
     private void CreateCorridor(Vector2Int from, Vector2Int to)
     {
         int x = from.x;
         int y = from.y;
 
-        // Primero, mover horizontalmente hasta la x de destino
+        // Mover horizontalmente hasta la x de destino
         while (x != to.x)
         {
-            grid[x, y] = 1;
+            CarveCorridorTile(x, y);
             if (to.x > x) x++;
             else x--;
         }
-        // Luego, mover verticalmente hasta la y de destino
+
+        // Mover verticalmente hasta la y de destino
         while (y != to.y)
         {
-            grid[x, y] = 1;
+            CarveCorridorTile(x, y);
             if (to.y > y) y++;
             else y--;
         }
-        // Finalmente, marcar la última posición como suelo
-        grid[x, y] = 1;
+
+        // Marcar la posición final
+        CarveCorridorTile(x, y);
     }
+
+    /// <summary>
+    /// Cava un pasillo de 3 tiles de ancho centrado en (x, y)
+    /// </summary>
+    private void CarveCorridorTile(int x, int y)
+    {
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                int nx = x + dx;
+                int ny = y + dy;
+
+                if (nx >= 0 && ny >= 0 && nx < width && ny < height)
+                {
+                    grid[nx, ny] = 1; // Piso
+                }
+            }
+        }
+    }
+
 
     /// <summary>
     /// Recorre la matriz y coloca Floor o Wall tiles según corresponda.

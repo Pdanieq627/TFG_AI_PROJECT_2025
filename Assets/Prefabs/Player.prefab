@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 6581180027653280988}
   - component: {fileID: 81171289246964337}
   - component: {fileID: 2031500822407802163}
+  - component: {fileID: -5569684580461928501}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -223,3 +224,15 @@ MonoBehaviour:
   hitboxOrigin: {fileID: 5485598562205973029}
   hitboxSize: {x: 1, y: 1}
   attackCooldown: 0.5
+--- !u!114 &-5569684580461928501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4327381775709979435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a606131dbc39964f8d26404581f725a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
